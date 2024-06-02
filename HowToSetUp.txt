@@ -1,0 +1,10 @@
+How to install and setup the database:
+
+1. Install MySQL Database on your local machine (Google how to)
+2. Write down the log in details to it
+3. Update the connection info in the application.properties (located here: m426/src/main/resources/application.properties)
+4. Start the REST Service
+5. Fix errors popping up (It works on my machine :-))
+6. Visit http://localhost:8080/index.html
+7. Fill in the form and submit
+8. List is automatically refreshed
