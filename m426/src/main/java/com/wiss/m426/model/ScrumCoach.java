@@ -11,7 +11,7 @@ public class ScrumCoach {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String value;
+    private String email;
     
     // Getters and Setters
     public Long getId() {
@@ -30,12 +30,12 @@ public class ScrumCoach {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
+    public String getEmail() {
+        return email;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

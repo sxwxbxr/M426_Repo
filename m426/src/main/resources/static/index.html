@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrum Coaches</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="mb-4">Scrum Coaches</h2>
+    <form id="coachForm">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" class="form-control" id="email" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" id="refreshButton">Refresh</button>
+    </form>
+    <h3 class="mt-4">Scrum Coaches List</h3>
+    <ul class="list-group" id="coachesList"></ul>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    document.getElementById('coachForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+
+        fetch('/api/ScrumCoaches', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email })
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('Scrum Coach added successfully');
+                document.getElementById('coachForm').reset();
+                loadCoaches();
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    document.getElementById('refreshButton').addEventListener('click', loadCoaches);
+
+    function loadCoaches() {
+        fetch('/api/ScrumCoaches')
+            .then(response => response.json())
+            .then(data => {
+                const coachesList = document.getElementById('coachesList');
+                coachesList.innerHTML = '';
+                data.forEach(coach => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = `${coach.name} (${coach.email})`;
+                    coachesList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Load coaches on page load
+    loadCoaches();
+</script>
+</body>
+</html>
