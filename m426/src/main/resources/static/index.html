@@ -2,56 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Scrum Coaches</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!--
-        The style block contains CSS rules for the HTML elements.
-        It sets the background color, padding, and other properties for the body and other elements.
-    -->
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .list-group-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .delete-btn {
-            cursor: pointer;
-            color: red;
-        }
-    </style>
+    <link href="./css/styles.css" rel="stylesheet">
 </head>
 <body>
-<!-- 
-    The main container of the application.
-    It contains a form for adding new Scrum Coaches and a list for displaying existing ones.
--->
+
 <div class="container">
     <h2 class="mb-4">Scrum Coaches</h2>
     <!-- The form for adding new Scrum Coaches -->
     <form id="coachForm">
         <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" required>
+            <input class="form-control" id="name" required type="text">
         </div>
         <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" class="form-control" id="email" required>
+            <input class="form-control" id="email" required type="email">
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <button type="button" class="btn btn-secondary" id="refreshButton">Refresh</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="btn btn-secondary" id="refreshButton" type="button">Refresh</button>
     </form>
     <!-- The list for displaying existing Scrum Coaches -->
     <h3 class="mt-4">Scrum Coaches List</h3>
@@ -61,87 +31,13 @@
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<!-- 
-    The script block contains JavaScript code for handling form submission, 
-    fetching and displaying Scrum Coaches, and deleting Scrum Coaches.
--->
+<!-- Do we need this? -->
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+
+<script src="./js/script.js"></script>
+
 <script>
-    // Event listener for form submission
-    document.getElementById('coachForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-
-        // POST request to create a new Scrum Coach
-        fetch('/api/ScrumCoaches', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, email })
-        })
-            .then(response => response.json())
-            .then(data => {
-                alert('Scrum Coach added successfully');
-                document.getElementById('coachForm').reset();
-                loadCoaches();
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
-    // Event listener for the refresh button
-    document.getElementById('refreshButton').addEventListener('click', loadCoaches);
-
-    // Function to fetch and display Scrum Coaches
-    function loadCoaches() {
-        fetch('/api/ScrumCoaches')
-            .then(response => response.json())
-            .then(data => {
-                const coachesList = document.getElementById('coachesList');
-                coachesList.innerHTML = '';
-                data.forEach(coach => {
-                    const li = document.createElement('li');
-                    li.className = 'list-group-item';
-                    li.innerHTML = `${coach.name} (${coach.email}) <span class="delete-btn" data-id="${coach.id}">X</span>`;
-                    coachesList.appendChild(li);
-                });
-                attachDeleteEventListeners();
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    // Function to attach event listeners to the delete buttons
-    function attachDeleteEventListeners() {
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const coachId = this.getAttribute('data-id');
-                if (confirm('Are you sure you want to delete this entry?')) {
-                    deleteCoach(coachId);
-                }
-            });
-        });
-    }
-
-    // Function to delete a Scrum Coach
-    function deleteCoach(id) {
-        fetch(`/api/ScrumCoaches/${id}`, {
-            method: 'DELETE'
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('Scrum Coach deleted successfully');
-                    loadCoaches();
-                } else {
-                    alert('Failed to delete Scrum Coach');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    // Load coaches on page load
     loadCoaches();
 </script>
 </body>
